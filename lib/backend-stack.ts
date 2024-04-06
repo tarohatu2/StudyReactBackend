@@ -32,7 +32,18 @@ export class BackendStack extends cdk.Stack {
       }
     })
 
+    const getUserProfileLambda = new lambda.Function(this, 'get-user-profile-lambda', {
+      runtime: lambda.Runtime.NODEJS_LATEST,
+      handler: 'index.getUserProfile',
+      code: lambda.Code.fromAsset('./lambda/user-profiles/handlers'),
+      memorySize: 256,
+      environment: {
+        TABLE_NAME: userTable.tableName
+      }
+    })
+
     userTable.grantWriteData(putUserProfileLambda)
+    userTable.grantReadData(getUserProfileLambda)
 
     const ContentsTable = new ddb.Table(this, 'contents-table', {
       tableName: 'ContentsTable',
