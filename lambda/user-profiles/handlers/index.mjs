@@ -27,7 +27,7 @@ export const getUserProfile = async (event) => {
   const { userId } = event
   const command = new QueryCommand({
     TableName: tableName,
-    KeyConditionExpression: 'pk = :pk',
+    KeyConditionExpression: 'userId = :pk',
     ExpressionAttributeValues: {
       ':pk': { 'S': userId }
     }
