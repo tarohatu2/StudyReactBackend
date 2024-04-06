@@ -26,7 +26,10 @@ export class BackendStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: 'index.put',
       code: lambda.Code.fromAsset('./lambda/user-profiles/handlers'),
-      memorySize: 256
+      memorySize: 256,
+      environment: {
+        TABLE_NAME: userTable.tableName
+      }
     })
 
     userTable.grantWriteData(putUserProfileLambda)
