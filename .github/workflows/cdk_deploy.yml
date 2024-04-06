@@ -6,7 +6,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
 
@@ -18,7 +18,7 @@ jobs:
 
       - run: npm run build
 
-      - uses: aws-actions/configure-aws-credentials@v1-node20
+      - uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ap-northeast-1
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-oidc-Role-uttBz3BMAavT
