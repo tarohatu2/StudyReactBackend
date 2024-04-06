@@ -8,9 +8,15 @@ export const put = async (event) => {
   const command = new PutItemCommand({
     TableName: tableName,
     Item: {
-      userId,
-      type,
-      name
+      userId: {
+        'S': userId
+      },
+      type: {
+        'S': type
+      },
+      name: {
+        'S': name
+      }
     }
   })
   const result = await ddbClient.send(command)
