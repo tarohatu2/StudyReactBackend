@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as ddb from 'aws-cdk-lib/aws-dynamodb'
-
+import * as lambda from 'aws-cdk-lib/aws-lambda'
 export class BackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -21,6 +21,15 @@ export class BackendStack extends cdk.Stack {
       readCapacity: 1,
       writeCapacity: 1
     })
+
+    const putUserProfileLambda = new lambda.Function(this, 'put-user-profile-lambda', {
+      runtime: lambda.Runtime.NODEJS_LATEST,
+      handler: 'index.put',
+      code: lambda.Code.fromAsset('./lambda/user-profiles/handler'),
+      memorySize: 256
+    })
+
+    userTable.grantWriteData(putUserProfileLambda)
 
     const ContentsTable = new ddb.Table(this, 'contents-table', {
       tableName: 'ContentsTable',
