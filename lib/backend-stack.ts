@@ -25,7 +25,7 @@ export class BackendStack extends cdk.Stack {
     const putUserProfileLambda = new lambda.Function(this, 'put-user-profile-lambda', {
       runtime: lambda.Runtime.NODEJS_LATEST,
       handler: 'index.put',
-      code: lambda.Code.fromAsset('./lambda/user-profiles/handler'),
+      code: lambda.Code.fromAsset('./lambda/user-profiles/handlers'),
       memorySize: 256
     })
 
