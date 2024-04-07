@@ -34,8 +34,8 @@ export class BackendStack extends cdk.Stack {
 
     const getUserProfileLambda = new lambda.Function(this, 'get-user-profile-lambda', {
       runtime: lambda.Runtime.NODEJS_LATEST,
-      handler: 'index.getUserProfile',
-      code: lambda.Code.fromAsset('./lambda/user-profiles/handlers'),
+      handler: 'user-profiles/handlersindex.getUserProfile',
+      code: lambda.Code.fromAsset('./lambda'),
       memorySize: 256,
       environment: {
         TABLE_NAME: userTable.tableName
@@ -62,8 +62,8 @@ export class BackendStack extends cdk.Stack {
 
     const putUseContentsLambda = new lambda.Function(this, 'put-contents-lambda', {
       runtime: lambda.Runtime.NODEJS_LATEST,
-      handler: 'index.put',
-      code: lambda.Code.fromAsset('./lambda/contents/handlers'),
+      handler: 'contents/handlers/index.put',
+      code: lambda.Code.fromAsset('./lambda'),
       memorySize: 256,
       environment: {
         TABLE_NAME: contentsTable.tableName
