@@ -11,6 +11,7 @@
   "dependencies": {
     "@middy/core": "^5.3.2",
     "@middy/error-logger": "^5.3.2",
+    "@middy/http-json-body-parser": "^5.3.2",
     "@middy/input-output-logger": "^5.3.2"
   }
 }

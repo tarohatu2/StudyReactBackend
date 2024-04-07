@@ -1,11 +1,14 @@
-import { DynamoDBClient, PutItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb'
+import middy from '@middy/core'
+import errorLogger from '@middy/error-logger'
+import inputOutputLogger from '@middy/input-output-logger'
+import httpJsonBodyParser from '@middy/http-json-body-parser';
 
+import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'
 const ddbClient = new DynamoDBClient({ region: 'ap-northeast-1' })
 const tableName = process.env.TABLE_NAME
 
 export const put = async (event) => {
-  const body = JSON.parse(event.body)
-  const { userId, type, datetime } = body
+  const { userId, type, datetime } = event.body
   const createdAt = (datetime * 10000) + 1 
   const command = new PutItemCommand({
     TableName: tableName,
@@ -28,3 +31,9 @@ export const put = async (event) => {
   };
   return response
 }
+
+export const putHandler = middy()
+  .use(httpJsonBodyParser)
+  .use(inputOutputLogger())
+  .use(errorLogger())
+  .handler(put)
