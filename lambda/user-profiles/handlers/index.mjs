@@ -7,7 +7,7 @@ const ddbClient = new DynamoDBClient({ region: 'ap-northeast-1' })
 const tableName = process.env.TABLE_NAME
 
 export const put = async (event) => {
-  const { userId, type, name } = event
+  const { userId, type, name } = event.body
   const command = new PutItemCommand({
     TableName: tableName,
     Item: {
@@ -39,7 +39,7 @@ export const putHandler = middy()
   .handler(put)
 
 export const getUserProfile = async (event) => {
-  const { userId } = event
+  const { userId } = event.queryStringParameters
   const command = new QueryCommand({
     TableName: tableName,
     KeyConditionExpression: 'userId = :pk',
