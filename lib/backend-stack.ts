@@ -70,6 +70,6 @@ export class BackendStack extends cdk.Stack {
       }
     })
 
-    contentsTable.grantWriteData(putUserProfileLambda)
+    contentsTable.grantWriteData(putUseContentsLambda)
   }
 }
