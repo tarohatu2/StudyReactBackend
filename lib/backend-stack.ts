@@ -45,7 +45,7 @@ export class BackendStack extends cdk.Stack {
     userTable.grantWriteData(putUserProfileLambda)
     userTable.grantReadData(getUserProfileLambda)
 
-    const ContentsTable = new ddb.Table(this, 'contents-table', {
+    const contentsTable = new ddb.Table(this, 'contents-table', {
       tableName: 'ContentsTable',
       partitionKey: {
         name: "userIdType",
@@ -59,5 +59,17 @@ export class BackendStack extends cdk.Stack {
       readCapacity: 1,
       writeCapacity: 1
     })
+
+    const putUseContentsLambda = new lambda.Function(this, 'put-contents-lambda', {
+      runtime: lambda.Runtime.NODEJS_LATEST,
+      handler: 'index.put',
+      code: lambda.Code.fromAsset('./lambda/contents/handlers'),
+      memorySize: 256,
+      environment: {
+        TABLE_NAME: contentsTable.tableName
+      }
+    })
+
+    contentsTable.grantWriteData(putUserProfileLambda)
   }
 }
