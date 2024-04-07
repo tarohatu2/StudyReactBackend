@@ -36,7 +36,7 @@ export const put = async (event) => {
 }
 
 export const putHandler = middy()
-  .use(httpJsonBodyParser)
+  .use(httpJsonBodyParser())
   .use(inputOutputLogger())
   .use(errorLogger())
   .handler(put)
