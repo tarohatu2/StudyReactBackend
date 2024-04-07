@@ -18,5 +18,12 @@ export const put = async (event) => {
     }
   })
   const result = await ddbClient.send(command)
-  return result
+  const response = {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(result),
+  };
+  return response
 }

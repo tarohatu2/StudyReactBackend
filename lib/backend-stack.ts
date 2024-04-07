@@ -3,10 +3,13 @@ import { Construct } from 'constructs';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as ddb from 'aws-cdk-lib/aws-dynamodb'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as apiGateway from 'aws-cdk-lib/aws-apigateway'
+
 export class BackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // ユーザ情報管理テーブルの設定
     const userTable = new ddb.Table(this, 'user-table', {
       tableName: 'UserProfileTable',
       partitionKey: {
@@ -45,6 +48,7 @@ export class BackendStack extends cdk.Stack {
     userTable.grantWriteData(putUserProfileLambda)
     userTable.grantReadData(getUserProfileLambda)
 
+    // コンテンツ管理テーブルの設定
     const contentsTable = new ddb.Table(this, 'contents-table', {
       tableName: 'ContentsTable',
       partitionKey: {
@@ -71,5 +75,25 @@ export class BackendStack extends cdk.Stack {
     })
 
     contentsTable.grantWriteData(putUseContentsLambda)
+
+    // API Gatewayの設定
+    const gateway = new apiGateway.RestApi(this, 'user-api-gateway', {
+      deployOptions: {
+        stageName: 'v1'
+      },
+      restApiName: 'user-api'
+    })
+
+    const resourceUserProfile = gateway.root.addResource('profile')
+    resourceUserProfile.addMethod('POST', new apiGateway.LambdaIntegration(putUserProfileLambda))
+    resourceUserProfile.addMethod('GET', new apiGateway.LambdaIntegration(getUserProfileLambda))
+
+    const resourceContents = gateway.root.addResource('contents')
+    resourceContents.addMethod('POST', new apiGateway.LambdaIntegration(putUseContentsLambda))
+
+    new cdk.CfnOutput(this, 'api-gateway-url', {
+      description: 'apigateway endpoint',
+      value: gateway.url
+    })
   }
 }

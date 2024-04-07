@@ -23,7 +23,14 @@ export const put = async (event) => {
     }
   })
   const result = await ddbClient.send(command)
-  return result
+  const response = {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(result),
+  };
+  return response
 }
 
 export const putHandler = middy()
@@ -41,5 +48,12 @@ export const getUserProfile = async (event) => {
     }
   })
   const result = await ddbClient.send(command)
-  return result.Items
+  const response = {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ items: result }),
+  };
+  return response
 }
