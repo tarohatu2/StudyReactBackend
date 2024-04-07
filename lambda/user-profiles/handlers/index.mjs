@@ -1,3 +1,6 @@
+import middy from '@middy/core'
+import errorLogger from '@middy/error-logger'
+import inputOutputLogger from '@middy/input-output-logger'
 import { DynamoDBClient, PutItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb'
 
 const ddbClient = new DynamoDBClient({ region: 'ap-northeast-1' })
@@ -22,6 +25,11 @@ export const put = async (event) => {
   const result = await ddbClient.send(command)
   return result
 }
+
+export const putHandler = middy()
+  .use(inputOutputLogger())
+  .use(errorLogger())
+  .handler(put)
 
 export const getUserProfile = async (event) => {
   const { userId } = event
