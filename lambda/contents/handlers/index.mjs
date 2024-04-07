@@ -2,6 +2,7 @@ import middy from '@middy/core'
 import errorLogger from '@middy/error-logger'
 import inputOutputLogger from '@middy/input-output-logger'
 import httpJsonBodyParser from '@middy/http-json-body-parser';
+import httpSecurityHeaders from '@middy/http-security-headers'
 
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'
 const ddbClient = new DynamoDBClient({ region: 'ap-northeast-1' })
@@ -33,6 +34,7 @@ export const put = async (event) => {
 }
 
 export const putHandler = middy()
+  .use(httpSecurityHeaders())
   .use(httpJsonBodyParser())
   .use(inputOutputLogger())
   .use(errorLogger())
