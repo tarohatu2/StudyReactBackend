@@ -4,7 +4,8 @@ const ddbClient = new DynamoDBClient({ region: 'ap-northeast-1' })
 const tableName = process.env.TABLE_NAME
 
 export const put = async (event) => {
-  const { userId, type, datetime } = event.body
+  const body = JSON.parse(event.body)
+  const { userId, type, datetime } = body
   const createdAt = (datetime * 10000) + 1 
   const command = new PutItemCommand({
     TableName: tableName,
