@@ -13,7 +13,7 @@ export const put = async (event) => {
         'S': `${userId}-${type}`
       },
       createdAt: {
-        'N': createdAt
+        'N': `${createdAt}`
       }
     }
   })
