@@ -4,11 +4,11 @@ import inputOutputLogger from '@middy/input-output-logger'
 import httpJsonBodyParser from '@middy/http-json-body-parser';
 import httpSecurityHeaders from '@middy/http-security-headers'
 
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, PutItemCommand, GetItemCommand } from '@aws-sdk/client-dynamodb'
 const ddbClient = new DynamoDBClient({ region: 'ap-northeast-1' })
 const tableName = process.env.TABLE_NAME
 
-export const put = async (event) => {
+const put = async (event) => {
   const { userId, type, datetime } = event.body
   const createdAt = (datetime * 10000) + 1 
   const command = new PutItemCommand({
@@ -39,3 +39,30 @@ export const putHandler = middy()
   .use(inputOutputLogger())
   .use(errorLogger())
   .handler(put)
+
+const getItems = async (event) => {
+  const { usetId, type } = event.queryStringParameters
+  const command = new QueryCommand({
+    TableName: tableName,
+    KeyConditionExpression: 'userIdType = :pk',
+    ExpressionAttributeValues: {
+      ':pk': { 'S': `${userId}-${type}`}
+    }
+  })
+  const result = await ddbClient.send(command)
+  const response = {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ items: result }),
+  };
+  return response
+}
+
+export const getItemsHandler = middy()
+  .use(httpSecurityHeaders())
+  .use(httpJsonBodyParser())
+  .use(inputOutputLogger())
+  .use(errorLogger())
+  .handler(getItems)

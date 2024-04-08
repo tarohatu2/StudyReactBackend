@@ -66,7 +66,7 @@ export class BackendStack extends cdk.Stack {
 
     const putUseContentsLambda = new lambda.Function(this, 'put-contents-lambda', {
       runtime: lambda.Runtime.NODEJS_LATEST,
-      handler: 'contents/handlers/index.put',
+      handler: 'contents/handlers/index.putHandler',
       code: lambda.Code.fromAsset('./lambda'),
       memorySize: 256,
       environment: {
@@ -74,7 +74,18 @@ export class BackendStack extends cdk.Stack {
       }
     })
 
+    const getContentsLambda = new lambda.Function(this, 'get-contents-lambda', {
+      runtime: lambda.Runtime.NODEJS_LATEST,
+      handler: 'contents/handlers/index.getItemsHander',
+      code: lambda.Code.fromAsset('./lambda'),
+      memorySize: 256,
+      environment: {
+        TABLE_NAME: contentsTable.tableName
+      }
+    })
+    
     contentsTable.grantWriteData(putUseContentsLambda)
+    contentsTable.grantReadData(getContentsLambda)
 
     // API Gatewayの設定
     const gateway = new apiGateway.RestApi(this, 'user-api-gateway', {
@@ -90,7 +101,8 @@ export class BackendStack extends cdk.Stack {
 
     const resourceContents = gateway.root.addResource('contents')
     resourceContents.addMethod('POST', new apiGateway.LambdaIntegration(putUseContentsLambda))
-
+    resourceContents.addMethod('GET', new apiGateway.LambdaIntegration(getContentsLambda))
+    
     new cdk.CfnOutput(this, 'api-gateway-url', {
       description: 'apigateway endpoint',
       value: gateway.url
