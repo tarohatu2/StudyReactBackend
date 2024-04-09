@@ -10,6 +10,11 @@ const tableName = process.env.TABLE_NAME
 
 export const put = async (event) => {
   const { userId, type, datetime } = event.body
+  if (!userId || !type || !datetime) {
+    return {
+      statusCode: 400
+    }
+  }
   const createdAt = (datetime * 10000) + 1
   const command = new PutItemCommand({
     TableName: tableName,
