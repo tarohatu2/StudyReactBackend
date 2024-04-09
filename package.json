@@ -1,13 +1,14 @@
 {
   "name": "backend",
   "version": "0.1.0",
+  "type": "module",
   "bin": {
     "backend": "bin/backend.js"
   },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "cdk": "cdk",
     "setup": "npm --prefix ./lambda ci ./lambda",
     "lint": "eslint ./lambda --config eslint.config.mjs"
@@ -20,6 +21,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "20.11.30",
     "aws-cdk": "2.134.0",
+    "aws-sdk-client-mock": "^4.0.0",
     "eslint": "^8.57.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
