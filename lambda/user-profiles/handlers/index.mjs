@@ -1,7 +1,7 @@
 import middy from '@middy/core'
 import errorLogger from '@middy/error-logger'
 import inputOutputLogger from '@middy/input-output-logger'
-import httpJsonBodyParser from '@middy/http-json-body-parser';
+import httpJsonBodyParser from '@middy/http-json-body-parser'
 
 import { DynamoDBClient, PutItemCommand, QueryCommand } from '@aws-sdk/client-dynamodb'
 
@@ -14,13 +14,13 @@ export const put = async (event) => {
     TableName: tableName,
     Item: {
       userId: {
-        'S': userId
+        S: userId
       },
       type: {
-        'S': type
+        S: type
       },
       name: {
-        'S': name
+        S: name
       }
     }
   })
@@ -28,10 +28,10 @@ export const put = async (event) => {
   const response = {
     statusCode: 200,
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify(result),
-  };
+    body: JSON.stringify(result)
+  }
   return response
 }
 
@@ -47,16 +47,16 @@ export const getUserProfile = async (event) => {
     TableName: tableName,
     KeyConditionExpression: 'userId = :pk',
     ExpressionAttributeValues: {
-      ':pk': { 'S': userId }
+      ':pk': { S: userId }
     }
   })
   const result = await ddbClient.send(command)
   const response = {
     statusCode: 200,
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ items: result }),
-  };
+    body: JSON.stringify({ items: result })
+  }
   return response
 }
