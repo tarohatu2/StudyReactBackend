@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/test', '<rootDir>/lambda/tests'],
   moduleFileExtensions: ['ts', 'mjs', 'js'],
