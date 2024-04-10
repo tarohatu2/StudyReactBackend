@@ -10,7 +10,7 @@ const tableName = process.env.TABLE_NAME
 
 export const put = async (event) => {
   const { userId, type, datetime } = event.body
-  if (!userId || !type || !datetime) {
+  if (!userId || !type || !datetime || typeof datetime !== 'number') {
     return {
       statusCode: 400
     }

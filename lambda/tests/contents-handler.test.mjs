@@ -37,16 +37,32 @@ describe('putのテスト', () => {
         datetime: 17000
       }
     }
-    const expected = {
-      type: 'profile',
-      createdAt: 170000001
-    }
-
-    ddbClient.on(PutItemCommand).resolves(expected)
 
     const result = await put(event)
     expect(result.statusCode).toBe(400)
   })
-  it.todo('typeが不足している時に400エラーになること')
-  it.todo('datetimeの方が違う場合に400エラーになること')
+  it('typeが不足している時に400エラーになること', async () => {
+    const event = {
+      body: {
+        userId: '0001',
+        datetime: 17000
+      }
+    }
+    
+    const result = await put(event)
+    expect(result.statusCode).toBe(400)
+  })
+
+  it('datetimeの方が違う場合に400エラーになること', async () => {
+    const event = {
+      body: {
+        userId: '0001',
+        type: 'profile',
+        datetime: '17000'
+      }
+    }
+    
+    const result = await put(event)
+    expect(result.statusCode).toBe(400)
+  })
 })
