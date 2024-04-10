@@ -9,6 +9,14 @@ export class BackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // SAMテスト用のLambdaを作ってみる
+    new lambda.Function(this, 'sam-function', {
+      functionName: 'sam-function',
+      runtime: lambda.Runtime.NODEJS_LATEST,
+      handler: 'index.handler',
+      code: lambda.Code.fromAsset('./lambda/sam-sample')
+    })
+
     // ユーザ情報管理テーブルの設定
     const userTable = new ddb.Table(this, 'user-table', {
       tableName: 'UserProfileTable',
@@ -102,7 +110,7 @@ export class BackendStack extends cdk.Stack {
     const resourceContents = gateway.root.addResource('contents')
     resourceContents.addMethod('POST', new apiGateway.LambdaIntegration(putUseContentsLambda))
     resourceContents.addMethod('GET', new apiGateway.LambdaIntegration(getContentsLambda))
-    
+
     new cdk.CfnOutput(this, 'api-gateway-url', {
       description: 'apigateway endpoint',
       value: gateway.url
